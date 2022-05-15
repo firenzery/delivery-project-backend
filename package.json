@@ -20,6 +20,9 @@
         "mssql": "^6.2.3"
     },
     "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.23.0",
+        "@typescript-eslint/parser": "^5.23.0",
+        "eslint": "^8.15.0",
         "nodemon": "^2.0.6"
     }
 }

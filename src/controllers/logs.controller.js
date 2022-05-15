@@ -1,13 +1,13 @@
-const logData = require('../data/logs/index');
+import { createLog } from '../data/logs/index';
 
 async function addLog(data) {
     try {
-        return await logData.createLog(data);
+        return await createLog(data);
     } catch (error) {
-        res.status(400).send(error.message);
+        throw new Error(error.message);
     }
 }
 
-module.exports = {
+export default {
     addLog
 }

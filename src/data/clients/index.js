@@ -1,10 +1,10 @@
-const config = require('../../config');
-const sql = require('mssql');
-const bcrypt = require('bcrypt');
+import { sql as _sql } from '../../config';
+import { connect, Int, NVarChar, DateTime, Numeric } from 'mssql';
+import { hash, compare } from 'bcrypt';
 
 const getAllClients = async () => {
     try {
-        let pool = await sql.connect(config.sql);
+        let pool = await connect(_sql);
         const query = `SELECT * FROM TB_CLIENT_INFO`;
         const clientsList = await pool.request().query(query);
         return clientsList.recordset;
@@ -15,10 +15,10 @@ const getAllClients = async () => {
 
 const getById = async(clientId) => {
     try {
-        let pool = await sql.connect(config.sql);
+        let pool = await connect(_sql);
         const query = `SELECT * FROM TB_CLIENT_INFO WHERE ID_CLIENT = @clientId`;
         const client = await pool.request()
-                            .input('clientId', sql.Int, clientId)
+                            .input('clientId', Int, clientId)
                             .query(query);
         return client.recordset;
     } catch (error) {
@@ -28,10 +28,10 @@ const getById = async(clientId) => {
 
 const createClient = async (clientdata) => {
     try {
-        let pool = await sql.connect(config.sql);
+        let pool = await connect(_sql);
 
         const clientExist = await pool.request()
-                            .input('email', sql.NVarChar(50), clientdata.email)
+                            .input('email', NVarChar(50), clientdata.email)
                             .query(`SELECT * FROM TB_CLIENT_INFO WHERE EMAIL = @email`);
 
         if (clientExist.recordset.length === 0) {
@@ -55,16 +55,16 @@ const createClient = async (clientdata) => {
                 @nrPhone
             )`;
 
-            const hashedPassword = await bcrypt.hash(clientdata.password, 10);
+            const hashedPassword = await hash(clientdata.password, 10);
 
             const insertclient = await pool.request()
-                                .input('firstName', sql.NVarChar(50), clientdata.firstName)
-                                .input('surname', sql.NVarChar(50), clientdata.surname)
-                                .input('dateNasc', sql.DateTime, new Date(clientdata.dateNasc))
-                                .input('email', sql.NVarChar(50), clientdata.email)
-                                .input('password', sql.NVarChar(200), hashedPassword)
-                                .input('cpf', sql.Numeric, clientdata.cpf)
-                                .input('nrPhone', sql.Numeric, clientdata.nrPhone)
+                                .input('firstName', NVarChar(50), clientdata.firstName)
+                                .input('surname', NVarChar(50), clientdata.surname)
+                                .input('dateNasc', DateTime, new Date(clientdata.dateNasc))
+                                .input('email', NVarChar(50), clientdata.email)
+                                .input('password', NVarChar(200), hashedPassword)
+                                .input('cpf', Numeric, clientdata.cpf)
+                                .input('nrPhone', Numeric, clientdata.nrPhone)
                                 .query(query);                            
             return insertclient.recordset;
         } else {
@@ -77,7 +77,7 @@ const createClient = async (clientdata) => {
 
 const updateClient = async (clientId, data) => {
     try {
-        let pool = await sql.connect(config.sql);
+        let pool = await connect(_sql);
         const query = `UPDATE TB_CLIENT_INFO
             SET FIRST_NAME=@firstName,
                 SURNAME=@surname,
@@ -89,13 +89,13 @@ const updateClient = async (clientId, data) => {
             WHERE ID_CLIENT=@clientId`;
             
         const update = await pool.request()
-                        .input('firstName', sql.NVarChar(50), clientdata.firstName)
-                        .input('surname', sql.NVarChar(50), clientdata.surname)
-                        .input('dateNasc', sql.DateTime, new Date(clientdata.dateNasc))
-                        .input('email', sql.NVarChar(50), clientdata.email)
-                        .input('password', sql.NVarChar(50), clientdata.password)
-                        .input('cpf', sql.Numeric, clientdata.cpf)
-                        .input('nrPhone', sql.Numeric, clientdata.nrPhone)
+                        .input('firstName', NVarChar(50), data.firstName)
+                        .input('surname', NVarChar(50), data.surname)
+                        .input('dateNasc', DateTime, new Date(data.dateNasc))
+                        .input('email', NVarChar(50), data.email)
+                        .input('password', NVarChar(50), data.password)
+                        .input('cpf', Numeric, data.cpf)
+                        .input('nrPhone', Numeric, data.nrPhone)
                         .query(query);  
         return update.recordset;
     } catch (error) {
@@ -105,11 +105,11 @@ const updateClient = async (clientId, data) => {
 
 const deleteClient = async (clientId) => {
     try {
-        let pool = await sql.connect(config.sql);
+        let pool = await connect(_sql);
         const query = `DELETE TB_CLIENT_INFO
             WHERE ID_CLIENT=@clientId`;
         const deleteclient = await pool.request()
-                            .input('clientId', sql.Int, clientId)
+                            .input('clientId', Int, clientId)
                             .query(query);
         return deleteclient.recordset;
     } catch (error) {
@@ -119,25 +119,25 @@ const deleteClient = async (clientId) => {
 
 const login = async (clientData) => {
     try {
-        let pool = await sql.connect(config.sql);
+        let pool = await connect(_sql);
         const query = `SELECT * FROM TB_CLIENT_INFO
             WHERE EMAIL=@email`;
 
         const client = await pool.request()
-            .input('email', sql.NVarChar(50), clientData.email)
+            .input('email', NVarChar(50), clientData.email)
             .query(query);
         
         if (client.recordset.length) {
-            const vPass = await bcrypt.compare(clientData.password, client.recordset[0].PASSWORD);
+            const vPass = await compare(clientData.password, client.recordset[0].PASSWORD);
             const vEmail = client.recordset[0].EMAIL === clientData.email;
 
             if (vPass && vEmail) {
-                return 'login successfully';
+                return { passed: 1, message: 'Login Successfully'};
             } else {
-                throw new Error('Credenciais Invalidas!');
+                return { passed: 2, message: 'Credenciais Invalidas!'};
             }
         } else {
-            throw new Error('Email nao cadastrado!');
+            return { passed: 2, message: 'Email nao cadastrado!'};
         }
 
     } catch(err) {
@@ -147,7 +147,7 @@ const login = async (clientData) => {
 
 
 
-module.exports = {
+export default {
     getAllClients,
     getById,
     createClient,

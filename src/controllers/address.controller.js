@@ -1,14 +1,14 @@
-const addressData = require('../data/address/index');
+import { getById } from '../data/address/index';
 const getAddress = async (req, res, next) => {
     try {
         const addressId = req.params.id;
-        const address = await addressData.getById(addressId);
+        const address = await getById(addressId);
         res.send(address);
     } catch (error) {
         res.status(400).send(error.message);
     }
 }
 
-module.exports = {
+export default {
     getAddress
 }

@@ -1,9 +1,9 @@
-const config = require('../../config');
-const sql = require('mssql');
+import { sql as _sql } from '../../config';
+import { connect, NVarChar, DateTime } from 'mssql';
 
 const createLog = async (logdata) => {
     try {
-        let pool = await sql.connect(config.sql);
+        let pool = await connect(_sql);
         const query = `INSERT INTO 
         TB_LOGS (
             ID_LOG,
@@ -19,10 +19,10 @@ const createLog = async (logdata) => {
         )`;
 
         await pool.request()
-            .input('idLog', sql.NVarChar(50), logdata.idLog)
-            .input('message', sql.NVarChar(50), logdata.message)
-            .input('type', sql.NVarChar(50), logdata.type)
-            .input('dateTime', sql.DateTime, new Date(logdata.dateTime))
+            .input('idLog', NVarChar(50), logdata.idLog)
+            .input('message', NVarChar(50), logdata.message)
+            .input('type', NVarChar(50), logdata.type)
+            .input('dateTime', DateTime, new Date(logdata.dateTime))
             .query(query);     
                                    
         return console.log('Log adicionado com sucesso!')
@@ -32,6 +32,6 @@ const createLog = async (logdata) => {
     }
 }
 
-module.exports = {
+export default {
     createLog
 }

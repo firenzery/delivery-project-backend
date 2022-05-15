@@ -1,9 +1,7 @@
-const express = require('express');
-const addressControll = require('../controllers/address.controller');
-const router = express.Router();
+import { Router } from 'express';
+import { getAddress } from '../controllers/address.controller';
+const router = Router();
 
-router.get('/:id', addressControll.getAddress);
+router.get('/:id', getAddress);
 
-module.exports = {
-    routes: router
-}
+export const routes = router;

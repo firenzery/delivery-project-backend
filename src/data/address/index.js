@@ -1,12 +1,12 @@
-const config = require('../../config');
-const sql = require('mssql');
+import { sql as _sql } from '../../config';
+import { connect, Int } from 'mssql';
 
 const getById = async(addressId) => {
     try {
-        let pool = await sql.connect(config.sql);
+        let pool = await connect(_sql);
         const query = `SELECT * FROM TB_ADDRESS WHERE ID_ADDRESS = @addressId`;
         const address = await pool.request()
-                            .input('addressId', sql.Int, addressId)
+                            .input('addressId', Int, addressId)
                             .query(query);
         return address.recordset;
     } catch (error) {
@@ -14,6 +14,6 @@ const getById = async(addressId) => {
     }
 }
 
-module.exports = {
+export default {
     getById
 }
