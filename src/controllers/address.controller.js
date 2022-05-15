@@ -1,4 +1,4 @@
-import { getById } from '../data/address/index';
+import { getById } from '../data/address/index.js';
 const getAddress = async (req, res, next) => {
     try {
         const addressId = req.params.id;
@@ -9,6 +9,6 @@ const getAddress = async (req, res, next) => {
     }
 };
 
-export default {
+export {
     getAddress
 };

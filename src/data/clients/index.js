@@ -1,6 +1,8 @@
-import { sql as _sql } from '../../config';
-import { connect, Int, NVarChar, DateTime, Numeric } from 'mssql';
+import { sql as _sql } from '../../config.js';
 import { hash, compare } from 'bcrypt';
+import pkg from 'mssql';
+
+const { connect, Int, NVarChar, DateTime, Numeric } = pkg;
 
 const getAllClients = async () => {
     try {
@@ -147,7 +149,7 @@ const login = async (clientData) => {
 
 
 
-export default {
+export {
     getAllClients,
     getById,
     createClient,

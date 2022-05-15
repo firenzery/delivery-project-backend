@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import { getAllClients, getClient, addClient, updateClient, deleteClient, login } from '../controllers/client.controller';
+import  * as clie from '../controllers/client.controller.js';
 const router = Router();
 
-router.get('/all', getAllClients);
-router.get('/:id', getClient);
-router.post('', addClient);
-router.put('/:id', updateClient);
-router.delete('/:id', deleteClient);
-router.post('/login', login);
+router.get('/all', clie.getAllClients);
+router.get('/:id', clie.getClient);
+router.post('', clie.addClient);
+router.put('/:id', clie.updateClient);
+router.delete('/:id', clie.deleteClient);
+router.post('/login', clie.login);
 
 
 export const routes = router;

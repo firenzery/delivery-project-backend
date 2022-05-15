@@ -1,4 +1,4 @@
-import { getById } from '../data/sales/index';
+import { getById } from '../data/sales/index.ts';
 const getSale = async (req, res, next) => {
     try {
         const saleId = req.params.id;
@@ -9,6 +9,6 @@ const getSale = async (req, res, next) => {
     }
 };
 
-export default {
+export {
     getSale
 };

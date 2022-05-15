@@ -1,4 +1,4 @@
-import { sql as _sql } from '../../config';
+import { sql as _sql } from '../../config.js';
 import { connect, Int } from 'mssql';
 
 const getById = async(saleId) => {
@@ -14,6 +14,6 @@ const getById = async(saleId) => {
     }
 };
 
-export default {
+export {
     getById
 };

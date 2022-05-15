@@ -1,10 +1,10 @@
-import { addLog } from '../controllers/logs.controller';
+import { addLog } from './logs.controller.js';
 
-import { getAllClients as _getAllClients, getById, createClient, updateClient as _updateClient, deleteClient as _deleteClient, login as _login } from '../data/clients/index';
+import * as clie from '../data/clients/index.js';
 
 const getAllClients = async (req, res, next) => {
     try {
-        const clientlist = await _getAllClients();
+        const clientlist = await clie.getAllClients();
         res.send(clientlist);        
     } catch (error) {
         res.status(400).send(error.message);
@@ -14,7 +14,7 @@ const getAllClients = async (req, res, next) => {
 const getClient = async (req, res, next) => {
     try {
         const clientId = req.params.id;
-        const client = await getById(clientId);
+        const client = await clie.getById(clientId);
         res.send(client);
     } catch (error) {
         res.status(400).send(error.message);
@@ -24,7 +24,7 @@ const getClient = async (req, res, next) => {
 const addClient = async (req, res, next) => {
     try {
         const data = req.body;
-        const insert = await createClient(data);
+        const insert = await clie.createClient(data);
         addLog({
             idLog: `ADD_CLIENT_${data.cpf.toString().slice(0, 3)}_${data.nrPhone.toString().slice(-4)}_${new Date().getTime()}`,
             message: `Cliente ${data.firstName} adicionado`,
@@ -41,7 +41,7 @@ const updateClient = async (req, res, next) => {
     try {
         const clientId =  req.params.id;
         const data = req.body;
-        const updated = await _updateClient(clientId, data);
+        const updated = await clie.updateClient(clientId, data);
         addLog({
             idLog: `UPDATE_CLIENT_${data.cpf.toString().slice(0, 3)}_${data.nrPhone.toString().slice(-4)}_${new Date().getTime()}`,
             message: `Cliente ${data.firstName} atualizado`,
@@ -57,10 +57,10 @@ const updateClient = async (req, res, next) => {
 const deleteClient = async (req, res, next) => {
     try {
         const clientId = req.params.id;
-        const client = await getById(clientId);
+        const client = await clie.getById(clientId);
         if(client.length > 0) {
             const data = client[0];
-            const deletedClient = await _deleteClient(clientId);
+            const deletedClient = await clie.deleteClient(clientId);
             addLog({
                 idLog: `DELETE_CLIENT_${data.CPF.toString().slice(0, 3)}_${data.NR_PHONE.toString().slice(-4)}_${new Date().getTime()}`,
                 message: `Cliente ${client[0].FIRST_NAME} excluido`,
@@ -68,6 +68,8 @@ const deleteClient = async (req, res, next) => {
                 dateTime: new Date()
             });
             res.send(deletedClient);
+        } else {
+            res.send('O Cliente nao existe');
         }
         
     } catch (error) {
@@ -78,14 +80,14 @@ const deleteClient = async (req, res, next) => {
 const login = async (req, res, next) => {
     try {
         const data = req.body;
-        const result = await _login(data);
+        const result = await clie.login(data);
         res.send(result);
     } catch (error) {
         res.status(400).send(error.message);
     }
 };
 
-export default {
+export {
     getAllClients,
     getClient,
     addClient,

@@ -1,4 +1,4 @@
-import { createLog } from '../data/logs/index';
+import { createLog } from '../data/logs/index.js';
 
 async function addLog(data) {
     try {
@@ -8,6 +8,6 @@ async function addLog(data) {
     }
 }
 
-export default {
+export  {
     addLog
 };

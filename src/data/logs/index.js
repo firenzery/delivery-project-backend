@@ -1,6 +1,7 @@
-import { sql as _sql } from '../../config';
-import { connect, NVarChar, DateTime } from 'mssql';
+import { sql as _sql } from '../../config.js';
+import pkg from 'mssql';
 
+const { connect, NVarChar, DateTime } = pkg;
 const createLog = async (logdata) => {
     try {
         let pool = await connect(_sql);
@@ -32,6 +33,4 @@ const createLog = async (logdata) => {
     }
 };
 
-export default {
-    createLog
-};
+export { createLog } ;
