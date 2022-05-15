@@ -9,7 +9,7 @@ const getAllClients = async (req, res, next) => {
     } catch (error) {
         res.status(400).send(error.message);
     }
-}
+};
 
 const getClient = async (req, res, next) => {
     try {
@@ -19,14 +19,14 @@ const getClient = async (req, res, next) => {
     } catch (error) {
         res.status(400).send(error.message);
     }
-}
+};
 
 const addClient = async (req, res, next) => {
     try {
         const data = req.body;
         const insert = await createClient(data);
         addLog({
-            idLog: `ADD_CLIENT_${data.cpf.toString().slice(0,3)}_${data.nrPhone.toString().slice(-4)}_${new Date().getTime()}`,
+            idLog: `ADD_CLIENT_${data.cpf.toString().slice(0, 3)}_${data.nrPhone.toString().slice(-4)}_${new Date().getTime()}`,
             message: `Cliente ${data.firstName} adicionado`,
             type: 1,
             dateTime: new Date()
@@ -35,7 +35,7 @@ const addClient = async (req, res, next) => {
     } catch (error) {
         res.status(400).send(error.message);
     }
-}
+};
 
 const updateClient = async (req, res, next) => {
     try {
@@ -43,7 +43,7 @@ const updateClient = async (req, res, next) => {
         const data = req.body;
         const updated = await _updateClient(clientId, data);
         addLog({
-            idLog: `UPDATE_CLIENT_${data.cpf.toString().slice(0,3)}_${data.nrPhone.toString().slice(-4)}_${new Date().getTime()}`,
+            idLog: `UPDATE_CLIENT_${data.cpf.toString().slice(0, 3)}_${data.nrPhone.toString().slice(-4)}_${new Date().getTime()}`,
             message: `Cliente ${data.firstName} atualizado`,
             type: 2,
             dateTime: new Date()
@@ -52,7 +52,7 @@ const updateClient = async (req, res, next) => {
     } catch (error) {
         res.status(400).send(error.message);
     }
-}
+};
 
 const deleteClient = async (req, res, next) => {
     try {
@@ -62,7 +62,7 @@ const deleteClient = async (req, res, next) => {
             const data = client[0];
             const deletedClient = await _deleteClient(clientId);
             addLog({
-                idLog: `DELETE_CLIENT_${data.CPF.toString().slice(0,3)}_${data.NR_PHONE.toString().slice(-4)}_${new Date().getTime()}`,
+                idLog: `DELETE_CLIENT_${data.CPF.toString().slice(0, 3)}_${data.NR_PHONE.toString().slice(-4)}_${new Date().getTime()}`,
                 message: `Cliente ${client[0].FIRST_NAME} excluido`,
                 type: 3,
                 dateTime: new Date()
@@ -73,7 +73,7 @@ const deleteClient = async (req, res, next) => {
     } catch (error) {
         res.status(400).send(error.message);
     }
-}
+};
 
 const login = async (req, res, next) => {
     try {
@@ -83,7 +83,7 @@ const login = async (req, res, next) => {
     } catch (error) {
         res.status(400).send(error.message);
     }
-}
+};
 
 export default {
     getAllClients,
@@ -92,4 +92,4 @@ export default {
     updateClient,
     deleteClient,
     login
-}
+};

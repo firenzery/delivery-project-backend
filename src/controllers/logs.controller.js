@@ -10,4 +10,4 @@ async function addLog(data) {
 
 export default {
     addLog
-}
+};

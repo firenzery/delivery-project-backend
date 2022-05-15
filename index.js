@@ -13,5 +13,5 @@ app.use(_json());
 app.use('/client', routes);
 
 app.listen(port, () => {
-  console.log('app listening on url http://localhost:' + port )
+    console.log('app listening on url http://localhost:' + port);
 });

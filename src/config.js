@@ -5,7 +5,7 @@ config();
 
 const {PORT, HOST, HOST_URL, SQL_USER, SQL_PASSWORD, SQL_DATABASE, SQL_SERVER} = process.env;
 
-const sqlEncrypt = process.env.SQL_ENCRYPT === "true";
+const sqlEncrypt = process.env.SQL_ENCRYPT === 'true';
 
 assert(PORT, 'PORT is require');
 assert(HOST, 'HOST is required');

@@ -25,13 +25,13 @@ const createLog = async (logdata) => {
             .input('dateTime', DateTime, new Date(logdata.dateTime))
             .query(query);     
                                    
-        return console.log('Log adicionado com sucesso!')
+        return console.log('Log adicionado com sucesso!');
 
     } catch (error) {
         return error.message;
     }
-}
+};
 
 export default {
     createLog
-}
+};

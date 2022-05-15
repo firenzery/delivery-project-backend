@@ -7,8 +7,8 @@ const getSale = async (req, res, next) => {
     } catch (error) {
         res.status(400).send(error.message);
     }
-}
+};
 
 export default {
     getSale
-}
+};
