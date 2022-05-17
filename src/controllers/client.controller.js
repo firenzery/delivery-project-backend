@@ -21,17 +21,27 @@ const getClient = async (req, res, next) => {
     }
 };
 
+const getClientByEmail = async (email) => {
+    try {
+        const client = await clie.getByEmail(email);
+        return client;
+    } catch (error) {
+        throw Error(error.message);
+    }
+};
+
 const addClient = async (req, res, next) => {
     try {
         const data = req.body;
-        const insert = await clie.createClient(data);
+        await clie.createClient(data);
         addLog({
             idLog: `ADD_CLIENT_${data.cpf.toString().slice(0, 3)}_${data.nrPhone.toString().slice(-4)}_${new Date().getTime()}`,
             message: `Cliente ${data.firstName} adicionado`,
             type: 1,
             dateTime: new Date()
         });
-        res.send(insert);
+        const client = await getClientByEmail(data.email);
+        res.send(client);
     } catch (error) {
         res.status(400).send(error.message);
     }

@@ -11,5 +11,5 @@ app.use(cors());
 app.use('/client', routes);
 
 app.listen(port, () => {
-    console.log('app listening on url http://localhost:' + port);
+    console.log('app listening on url http://172.22.128.1:' + port);
 });

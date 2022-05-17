@@ -28,6 +28,19 @@ const getById = async(clientId) => {
     }
 };
 
+const getByEmail = async(email) => {
+    try {
+        let pool = await connect(_sql);
+        const query = 'SELECT * FROM TB_CLIENT_INFO WHERE EMAIL = @email';
+        const client = await pool.request()
+            .input('email', NVarChar(50), email)
+            .query(query);
+        return client.recordset[0];
+    } catch (error) {
+        return error.message;
+    }
+};
+
 const createClient = async (clientdata) => {
     try {
         let pool = await connect(_sql);
@@ -68,7 +81,6 @@ const createClient = async (clientdata) => {
                 .input('cpf', Numeric, clientdata.cpf)
                 .input('nrPhone', Numeric, clientdata.nrPhone)
                 .query(query);                            
-            return insertclient.recordset;
         } else {
             throw new Error('Email already used');
         }
@@ -121,17 +133,11 @@ const deleteClient = async (clientId) => {
 
 const login = async (clientData) => {
     try {
-        let pool = await connect(_sql);
-        const query = `SELECT * FROM TB_CLIENT_INFO
-            WHERE EMAIL=@email`;
-
-        const client = await pool.request()
-            .input('email', NVarChar(50), clientData.email)
-            .query(query);
+        const client = await getByEmail(clientData.email);
         
-        if (client.recordset.length) {
-            const vPass = await compare(clientData.password, client.recordset[0].PASSWORD);
-            const vEmail = client.recordset[0].EMAIL === clientData.email;
+        if (client) {
+            const vPass = await compare(clientData.password, client.PASSWORD);
+            const vEmail = client.EMAIL === clientData.email;
 
             if (vPass && vEmail) {
                 return { passed: 1, message: 'Login Successfully'};
@@ -155,5 +161,6 @@ export {
     createClient,
     updateClient,
     deleteClient,
-    login
+    login,
+    getByEmail
 };
