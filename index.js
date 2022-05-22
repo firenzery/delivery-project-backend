@@ -1,5 +1,5 @@
 import express, { json } from 'express';
-import { port } from './src/config.js';
+import { port, host } from './src/config.js';
 import cors from 'cors';
 import { routes } from './src/routes/client.routes.js';
 
@@ -11,5 +11,5 @@ app.use(cors());
 app.use('/client', routes);
 
 app.listen(port, () => {
-    console.log('app listening on url http://172.22.128.1:' + port);
+    console.log(`app listening on url ${host}:` + port);
 });

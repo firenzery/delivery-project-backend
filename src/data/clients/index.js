@@ -72,10 +72,16 @@ const createClient = async (clientdata) => {
 
             const hashedPassword = await hash(clientdata.password, 10);
 
-            const insertclient = await pool.request()
+
+
+            const dateParts = clientdata.dateNasc.split("/");
+
+            const dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+
+            await pool.request()
                 .input('firstName', NVarChar(50), clientdata.firstName)
                 .input('surname', NVarChar(50), clientdata.surname)
-                .input('dateNasc', DateTime, new Date(clientdata.dateNasc))
+                .input('dateNasc', DateTime, dateObject)
                 .input('email', NVarChar(50), clientdata.email)
                 .input('password', NVarChar(200), hashedPassword)
                 .input('cpf', Numeric, clientdata.cpf)
@@ -103,6 +109,7 @@ const updateClient = async (clientId, data) => {
             WHERE ID_CLIENT=@clientId`;
             
         const update = await pool.request()
+            .input('clientId', Int, clientId)
             .input('firstName', NVarChar(50), data.firstName)
             .input('surname', NVarChar(50), data.surname)
             .input('dateNasc', DateTime, new Date(data.dateNasc))
