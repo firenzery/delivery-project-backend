@@ -1,7 +1,8 @@
 import { sql as _sql } from '../../config.js';
-import { connect, Int } from 'mssql';
+import pkg from 'mssql';
 
-const getById = async(productId) => {
+const { connect, Int, NVarChar, DateTime, Numeric } = pkg;
+const getById = async (productId) => {
     try {
         let pool = await connect(_sql);
         const query = 'SELECT * FROM TB_PRODUCTS WHERE ID_PRODUCT = @productId';
@@ -14,6 +15,49 @@ const getById = async(productId) => {
     }
 };
 
+const getAllProducts = async () => {
+    try {
+        let pool = await connect(_sql);
+        const query = 'SELECT IMAGE image, NAME name, PRICE price, TYPE type FROM TB_PRODUCTS';
+        const products = await pool.request().query(query);
+        return products.recordset;
+    } catch (error) {
+        return error.message;
+    }
+}
+
+const createProduct = async (productData) => {
+    try {
+        console.log(productData);
+        let pool = await connect(_sql);
+        const query = `INSERT INTO 
+            TB_PRODUCTS(
+                IMAGE,
+                NAME,
+                PRICE,
+                TYPE,
+                DESCRIPTION
+            )
+            VALUES (
+                @image,
+                @name,
+                @price,
+                @type,
+                @description
+            )`;
+
+        await pool.request()
+            .input('image', NVarChar(100), productData.image)
+            .input('name', NVarChar(50), productData.name)
+            .input('price', Numeric(4,2), productData.price)
+            .input('type', Int, productData.type)
+            .input('description', NVarChar(300), productData.description)
+            .query(query);                            
+    } catch (error) {
+        return error.message;
+    }
+};
+
 export {
-    getById
+    getById, getAllProducts, createProduct
 };
