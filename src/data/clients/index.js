@@ -147,7 +147,7 @@ const login = async (clientData) => {
             const vEmail = client.EMAIL === clientData.email;
 
             if (vPass && vEmail) {
-                return { passed: 1, message: 'Login Successfully'};
+                return { idClient: client.ID_CLIENT, passed: 1, message: 'Login Successfully'};
             } else {
                 return { passed: 2, message: 'Credenciais Invalidas!'};
             }
