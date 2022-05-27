@@ -19,7 +19,7 @@ const getById = async(addressId) => {
 const getByUserId = async(userId) => {
     try {
         let pool = await connect(_sql);
-        const query = 'SELECT [ID_ADRESS] idAdress,[ID_CLIENT] idClient,[APARTMENT] apartment,[GROUP] [group] FROM TB_ADRESS WHERE ID_CLIENT = @userId';
+        const query = 'SELECT [ID_ADRESS] idAdress,[ID_CLIENT] idClient,[APARTMENT] apartment,[GROUP] [group], [BLOCK] [block] FROM TB_ADRESS WHERE ID_CLIENT = @userId';
         const address = await pool.request()
             .input('userId', Int, userId)
             .query(query);
@@ -34,13 +34,15 @@ const updateAdressData = async(newAdress) => {
         let pool = await connect(_sql);
         const query = `UPDATE TB_ADRESS
             SET APARTMENT=@apartment,
-                [GROUP]=@group
+                [GROUP]=@group,
+                [BLOCK]=@block
             WHERE ID_CLIENT=@idClient`;
             
         await pool.request()
             .input('idClient', Int, newAdress.idClient)
             .input('apartment', Int, newAdress.apartment)
             .input('group', Int, newAdress.group)
+            .input('block', NVarChar(1), newAdress.block)
             .query(query); 
 
         return newAdress;
@@ -57,12 +59,14 @@ const putAdress = async(newAdress) => {
             TB_ADRESS (
                 ID_CLIENT,
                 APARTMENT,
-                [GROUP]
+                [GROUP],
+                [BLOCK]
             )
             VALUES (
                 @idClient,
                 @apartment,
-                @group
+                @group,
+                @block
             )`;
 
 
@@ -70,6 +74,7 @@ const putAdress = async(newAdress) => {
             .input('idClient', Int, newAdress.idClient)
             .input('apartment', Int, newAdress.apartment)
             .input('group', Int, newAdress.group)
+            .input('block', NVarChar(1), newAdress.block)
             .query(query);   
                 
         const adress = await getByUserId(newAdress.idClient);
