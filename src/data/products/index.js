@@ -28,7 +28,6 @@ const getAllProducts = async () => {
 
 const createProduct = async (productData) => {
     try {
-        console.log(productData);
         let pool = await connect(_sql);
         const query = `INSERT INTO 
             TB_PRODUCTS(
@@ -58,6 +57,22 @@ const createProduct = async (productData) => {
     }
 };
 
+const getNewProducts = async () => {
+    try {
+        let pool = await connect(_sql);
+        const query = `SELECT TOP(5) * FROM TB_LOGS log
+        INNER JOIN TB_PRODUCTS prod
+        on log.ID_LOG IN (prod.ID_PRODUCT)
+        WHERE log.TYPE = 5 ORDER BY log.[DATETIME] DESC`;
+
+        const res = await pool.request().query(query);
+
+        return res.recordset;
+    } catch (error) {
+        return error.message;
+    }
+}
+
 export {
-    getById, getAllProducts, createProduct
+    getById, getAllProducts, createProduct, getNewProducts
 };

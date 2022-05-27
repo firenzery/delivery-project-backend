@@ -11,7 +11,7 @@ const getAllClients = async () => {
         const clientsList = await pool.request().query(query);
         return clientsList.recordset;
     } catch (error) {
-        console.log(error.message);
+        return error.message;
     }
 };
 
@@ -22,7 +22,7 @@ const getById = async(clientId) => {
         const client = await pool.request()
             .input('clientId', Int, clientId)
             .query(query);
-        return client.recordset;
+        return client.recordset[0];
     } catch (error) {
         return error.message;
     }
@@ -147,16 +147,16 @@ const login = async (clientData) => {
             const vEmail = client.EMAIL === clientData.email;
 
             if (vPass && vEmail) {
-                return { idClient: client.ID_CLIENT, passed: 1, message: 'Login Successfully'};
+                return client;
             } else {
-                return { passed: 2, message: 'Credenciais Invalidas!'};
+                throw new Error('Credenciais Invalidas!');
             }
         } else {
-            return { passed: 2, message: 'Email nao cadastrado!'};
+            throw new Error('Email nao cadastrado!');s
         }
 
     } catch(err) {
-        return err.message;
+        throw err;
     }
 };
 

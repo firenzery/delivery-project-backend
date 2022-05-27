@@ -13,7 +13,7 @@ const getAllClients = async (req, res, next) => {
 
 const getClient = async (req, res, next) => {
     try {
-        const clientId = req.params.id;
+        const clientId = Number(req.params.id);
         const client = await clie.getById(clientId);
         res.send(client);
     } catch (error) {

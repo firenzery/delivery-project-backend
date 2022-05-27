@@ -1,4 +1,4 @@
-import { getById, getAllProducts as getAll, createProduct } from '../data/products/index.js';
+import { getById, getAllProducts as getAll, createProduct, getNewProducts } from '../data/products/index.js';
 import { addLog } from './logs.controller.js';
 const getProduct = async (req, res, next) => {
     try {
@@ -24,7 +24,7 @@ const addProduct = async (req, res, next) => {
         const data = req.body;
         await createProduct(data);
         addLog({
-            idLog: `ADD_PRODUCT_${data.name}_${new Date().getTime()}`,
+            idLog: `ADD_PRODUCT_${data.idProduct}_${new Date().getTime()}`,
             message: `Produto ${data.name} adicionada`,
             type: 5,
             dateTime: new Date()
@@ -36,6 +36,15 @@ const addProduct = async (req, res, next) => {
     }
 }
 
+const getNewArrivalProducts = async (req, res) => {
+    try {
+        const products = await getNewProducts();
+        res.send(products);
+    } catch (error) {
+        res.send(400).send(error);
+    }
+}
+
 export {
-    getProduct, getAllProducts, addProduct
+    getProduct, getAllProducts, addProduct, getNewArrivalProducts
 };
