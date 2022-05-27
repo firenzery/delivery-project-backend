@@ -12,7 +12,7 @@ const getAddress = async (req, res, next) => {
 const updateAdress = async (req, res, next) => {
     try {
         const oldAdress = req.body;
-        const newAdress = await updateAdressData(oldAdress)
+        const newAdress = await updateAdressData(oldAdress);
         res.send(newAdress);
     } catch (error) {
         res.status(400).send(error.message);
@@ -24,7 +24,7 @@ const createAdress = async (req, res, next) => {
         const newAdress = await putAdress(req.body);
         res.status(200).send(newAdress);
     } catch (error) {
-
+        res.status(400).send(error.message);
     }
 }
 

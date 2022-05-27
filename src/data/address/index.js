@@ -10,9 +10,9 @@ const getById = async(addressId) => {
         const address = await pool.request()
             .input('addressId', Int, addressId)
             .query(query);
-        return address.recordset;
+        return address.recordset[0];
     } catch (error) {
-        return error.message;
+        throw error;
     }
 };
 
@@ -25,7 +25,7 @@ const getByUserId = async(userId) => {
             .query(query);
         return address.recordset[0];
     } catch (error) {
-        return error.message;
+        throw error;
     }
 };
 
@@ -47,7 +47,7 @@ const updateAdressData = async(newAdress) => {
 
         return newAdress;
     } catch (error) {
-        return error.message;
+        throw error;
     }
 }
 
@@ -82,7 +82,7 @@ const putAdress = async(newAdress) => {
         return adress;
                                  
     } catch (error) {
-        return error.message;
+        throw error;
     }
 }
 

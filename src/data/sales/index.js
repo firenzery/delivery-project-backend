@@ -8,9 +8,9 @@ const getById = async(saleId) => {
         const sale = await pool.request()
             .input('saleId', Int, saleId)
             .query(query);
-        return sale.recordset;
+        return sale.recordset[0];
     } catch (error) {
-        return error.message;
+        throw error;
     }
 };
 

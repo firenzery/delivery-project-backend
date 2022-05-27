@@ -11,7 +11,7 @@ const getById = async (productId) => {
             .query(query);
         return product.recordset;
     } catch (error) {
-        return error.message;
+        throw error;
     }
 };
 
@@ -22,7 +22,7 @@ const getAllProducts = async () => {
         const products = await pool.request().query(query);
         return products.recordset;
     } catch (error) {
-        return error.message;
+        throw error;
     }
 }
 
@@ -53,7 +53,7 @@ const createProduct = async (productData) => {
             .input('description', NVarChar(300), productData.description)
             .query(query);                            
     } catch (error) {
-        return error.message;
+        throw error;
     }
 };
 
@@ -67,9 +67,9 @@ const getNewProducts = async () => {
 
         const res = await pool.request().query(query);
 
-        return res.recordset;
+        return res.recordset[0];
     } catch (error) {
-        return error.message;
+        throw error;
     }
 }
 

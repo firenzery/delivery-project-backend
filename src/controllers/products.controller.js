@@ -32,7 +32,7 @@ const addProduct = async (req, res, next) => {
         res.send('Produto adicionado com sucesso!');
 
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send(error.message);
     }
 }
 
@@ -41,7 +41,7 @@ const getNewArrivalProducts = async (req, res) => {
         const products = await getNewProducts();
         res.send(products);
     } catch (error) {
-        res.send(400).send(error);
+        res.send(400).send(error.message);
     }
 }
 

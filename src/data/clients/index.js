@@ -11,7 +11,7 @@ const getAllClients = async () => {
         const clientsList = await pool.request().query(query);
         return clientsList.recordset;
     } catch (error) {
-        return error.message;
+        throw error;
     }
 };
 
@@ -24,7 +24,7 @@ const getById = async(clientId) => {
             .query(query);
         return client.recordset[0];
     } catch (error) {
-        return error.message;
+        throw error;
     }
 };
 
@@ -37,7 +37,7 @@ const getByEmail = async(email) => {
             .query(query);
         return client.recordset[0];
     } catch (error) {
-        return error.message;
+        throw error;
     }
 };
 
@@ -91,11 +91,11 @@ const createClient = async (clientdata) => {
             throw new Error('Email already used');
         }
     } catch (error) {
-        return error.message;
+        throw error;
     }
 };
 
-const updateClient = async (clientId, data) => {
+const updateClient = async (data) => {
     try {
         let pool = await connect(_sql);
         const query = `UPDATE TB_CLIENT_INFO
@@ -108,8 +108,8 @@ const updateClient = async (clientId, data) => {
                 CPF=@nrPhone
             WHERE ID_CLIENT=@clientId`;
             
-        const update = await pool.request()
-            .input('clientId', Int, clientId)
+        await pool.request()
+            .input('clientId', Int, data.clientId)
             .input('firstName', NVarChar(50), data.firstName)
             .input('surname', NVarChar(50), data.surname)
             .input('dateNasc', DateTime, new Date(data.dateNasc))
@@ -118,9 +118,10 @@ const updateClient = async (clientId, data) => {
             .input('cpf', Numeric, data.cpf)
             .input('nrPhone', Numeric, data.nrPhone)
             .query(query);  
-        return update.recordset;
+
+        return data;
     } catch (error) {
-        return error.message;
+        throw error;
     }
 };
 
@@ -129,12 +130,11 @@ const deleteClient = async (clientId) => {
         let pool = await connect(_sql);
         const query = `DELETE TB_CLIENT_INFO
             WHERE ID_CLIENT=@clientId`;
-        const deleteclient = await pool.request()
+        await pool.request()
             .input('clientId', Int, clientId)
             .query(query);
-        return deleteclient.recordset;
     } catch (error) {
-        return error.message;
+        throw error;
     }
 };
 

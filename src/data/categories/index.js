@@ -10,9 +10,9 @@ const getById = async (categoryId) => {
         const category = await pool.request()
             .input('categoryId', Int, categoryId)
             .query(query);
-        return category.recordset;
+        return category.recordset[0];
     } catch (error) {
-        return error.message;
+        throw error;
     }
 };
 
@@ -23,7 +23,7 @@ const getAllCategories = async () => {
         const categories = await pool.request().query(query);
         return categories.recordset;
     } catch (error) {
-        return error.message;
+        throw error;
     }
 }
 
@@ -57,7 +57,7 @@ const createCategory = async (categoryData) => {
             throw new Error('Category already exists');
         }
     } catch (error) {
-        return error.message;
+        throw error;
     }
 };
 
