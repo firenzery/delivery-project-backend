@@ -22,14 +22,14 @@ const getAllProducts = async (req, res, next) => {
 const addProduct = async (req, res, next) => {
     try {
         const data = req.body;
-        await createProduct(data);
+        const product = await createProduct(data);
         addLog({
-            idLog: `ADD_PRODUCT_${data.idProduct}_${new Date().getTime()}`,
+            idLog: `ADD_PRODUCT_${product.idProduct}_${new Date().getTime()}`,
             message: `Produto ${data.name} adicionada`,
             type: 5,
             dateTime: new Date()
         });
-        res.send('Produto adicionado com sucesso!');
+        res.send(product);
 
     } catch (error) {
         res.status(400).send(error.message);

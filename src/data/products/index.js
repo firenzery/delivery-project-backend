@@ -9,11 +9,24 @@ const getById = async (productId) => {
         const product = await pool.request()
             .input('productId', Int, productId)
             .query(query);
-        return product.recordset;
+        return product.recordset[0];
     } catch (error) {
         throw error;
     }
 };
+
+const getByName = async (name) => {
+    try {
+        let pool = await connect(_sql);
+        const query = 'SELECT ID_PRODUCT idProduct, [IMAGE] [image], [NAME] [name], PRICE price, [TYPE] [type], [DESCRIPTION] [description], [DATETIME] [datetime] FROM TB_PRODUCTS WHERE NAME = @name';
+        const product = await pool.request()
+            .input('name', NVarChar(50), name)
+            .query(query);
+        return product.recordset[0];
+    } catch (error) {
+        throw error;
+    }
+}
 
 const getAllProducts = async () => {
     try {
@@ -35,14 +48,16 @@ const createProduct = async (productData) => {
                 NAME,
                 PRICE,
                 TYPE,
-                DESCRIPTION
+                DESCRIPTION,
+                DATETIME
             )
             VALUES (
                 @image,
                 @name,
                 @price,
                 @type,
-                @description
+                @description,
+                @datetime
             )`;
 
         await pool.request()
@@ -51,7 +66,10 @@ const createProduct = async (productData) => {
             .input('price', Numeric(4,2), productData.price)
             .input('type', Int, productData.type)
             .input('description', NVarChar(300), productData.description)
-            .query(query);                            
+            .input('datetime', DateTime, new Date())
+            .query(query);
+        
+        return await getByName(productData.name); 
     } catch (error) {
         throw error;
     }
@@ -60,19 +78,18 @@ const createProduct = async (productData) => {
 const getNewProducts = async () => {
     try {
         let pool = await connect(_sql);
-        const query = `SELECT TOP(5) * FROM TB_LOGS log
-        INNER JOIN TB_PRODUCTS prod
-        on log.ID_LOG IN (prod.ID_PRODUCT)
-        WHERE log.TYPE = 5 ORDER BY log.[DATETIME] DESC`;
+        const query = `SELECT TOP(5) ID_PRODUCT idProduct, [IMAGE] [image], [NAME] [name], PRICE price, [TYPE] [type], [DESCRIPTION] [description], [DATETIME] [datetime]
+                    FROM TB_PRODUCTS
+                    ORDER BY [DATETIME] DESC`;
 
         const res = await pool.request().query(query);
 
-        return res.recordset[0];
+        return res.recordset;
     } catch (error) {
         throw error;
     }
 }
 
 export {
-    getById, getAllProducts, createProduct, getNewProducts
+    getById, getAllProducts, createProduct, getNewProducts, getByName
 };
