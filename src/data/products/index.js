@@ -31,7 +31,7 @@ const getByName = async (name) => {
 const getAllProducts = async () => {
     try {
         let pool = await connect(_sql);
-        const query = 'SELECT IMAGE image, NAME name, PRICE price, TYPE type FROM TB_PRODUCTS';
+        const query = 'SELECT IMAGE image, NAME name, PRICE price, TYPE type, [DESCRIPTION] [description], [DATETIME] [datetime] FROM TB_PRODUCTS';
         const products = await pool.request().query(query);
         return products.recordset;
     } catch (error) {
