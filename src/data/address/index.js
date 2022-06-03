@@ -70,7 +70,7 @@ const putAdress = async(newAdress) => {
             )`;
 
 
-        await pool.request()
+        const res = await pool.request()
             .input('idClient', Int, newAdress.idClient)
             .input('apartment', Int, newAdress.apartment)
             .input('group', Int, newAdress.group)
