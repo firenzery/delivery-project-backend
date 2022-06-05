@@ -61,7 +61,7 @@ const createProduct = async (productData) => {
             )`;
 
         await pool.request()
-            .input('image', NVarChar(100), productData.image)
+            .input('image', NVarChar('MAX'), productData.image)
             .input('name', NVarChar(50), productData.name)
             .input('price', Numeric(4,2), productData.price)
             .input('type', Int, productData.type)
