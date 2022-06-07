@@ -1,7 +1,9 @@
 import { Router } from 'express';
-import { getSale } from '../controllers/sales.controller.js';
+import { getSalesByUser, addSaleByUser, getProductsBySaleId } from '../controllers/sales.controller.js';
 const router = Router();
 
-router.get('/:id', getSale);
+router.get('/:id', getSalesByUser);
+router.post('', addSaleByUser);
+router.get('/products/:id', getProductsBySaleId);
 
 export const routes = router;
