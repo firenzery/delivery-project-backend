@@ -16,8 +16,11 @@ app.use('/client', clientRoute);
 app.use('/products', productsRoute);
 app.use('/categories', categoriesRoute);
 app.use('/adress', adressRoute);
-app.use('/sales', salesRoute)
+app.use('/sales', salesRoute);
+app.get('/', (_, res)=>{
+  res.send('Firenzery is on fire!')
+})
 
 app.listen(port, () => {
-    console.log(`app listening on url ${host}:` + port);
+    console.log(`Server running on ${host}:${port}`);
 });

@@ -1,0 +1,19 @@
+
+# env vars
+.env
+
+# yarn
+yarn.lock
+yarn-error.log
+
+# npm
+packag-lock.json
+
+# node modules
+node_modules/
+
+# IDE (vscode)
+.vscode/
+
+# create db structure
+FIRE_DB.SQL
