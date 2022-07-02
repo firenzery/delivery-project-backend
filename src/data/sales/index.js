@@ -105,6 +105,25 @@ const addSaleById = async(sale, products) => {
     }
 }
 
+const updateStateSale = async (idSale, state) => {
+    try {
+        let pool = await connect(_sql);
+
+        const query = `UPDATE TB_SALES 
+            SET STATE = @state 
+            WHERE ID_SALE = @idSale`;
+
+        await pool.request()
+            .input('idSale', Int, idSale)
+            .input('state', Int, state)
+            .query(query);
+
+        return 'Alterado status da compra com sucesso.';
+    } catch (error) {
+        throw error;
+    }
+}
+
 export {
-    getSalesById, addSaleById, getById, getProductsById
+    getSalesById, addSaleById, getById, getProductsById, updateStateSale
 };
