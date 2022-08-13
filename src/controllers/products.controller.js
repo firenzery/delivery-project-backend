@@ -1,4 +1,4 @@
-import { getById, getAllProducts as getAll, createProduct, getNewProducts } from '../data/products/index.js';
+import { getById, getAllProducts as getAll, createProduct, getPopularProducts as getPopular } from '../data/products/index.js';
 import { addLog } from './logs.controller.js';
 const getProduct = async (req, res, next) => {
     try {
@@ -36,9 +36,9 @@ const addProduct = async (req, res, next) => {
     }
 }
 
-const getNewArrivalProducts = async (req, res) => {
+const getPopularProducts = async (req, res) => {
     try {
-        const products = await getNewProducts();
+        const products = await getPopular();
         res.send(products);
     } catch (error) {
         res.send(400).send(error.message);
@@ -46,5 +46,5 @@ const getNewArrivalProducts = async (req, res) => {
 }
 
 export {
-    getProduct, getAllProducts, addProduct, getNewArrivalProducts
+    getProduct, getAllProducts, addProduct, getPopularProducts
 };

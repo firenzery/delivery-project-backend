@@ -23,6 +23,11 @@ const getByUserId = async(userId) => {
         const address = await pool.request()
             .input('userId', Int, userId)
             .query(query);
+
+        if (!address.recordset.length) {
+            throw new Error('O cliente não possui endereço cadastrado');
+        }
+
         return address.recordset[0];
     } catch (error) {
         throw error;

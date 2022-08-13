@@ -31,7 +31,7 @@ const getByName = async (name) => {
 const getAllProducts = async () => {
     try {
         let pool = await connect(_sql);
-        const query = 'SELECT ID_PRODUCT idProduct, IMAGE image, NAME name, PRICE price, TYPE type, [DESCRIPTION] [description], [DATETIME] [datetime] FROM TB_PRODUCTS';
+        const query = 'SELECT ID_PRODUCT idProduct, [IMAGE] [image], [NAME] [name], PRICE price, [TYPE] [type], [DESCRIPTION] [description], [DATETIME] [datetime] FROM TB_PRODUCTS';
         const products = await pool.request().query(query);
         return products.recordset;
     } catch (error) {
@@ -75,13 +75,11 @@ const createProduct = async (productData) => {
     }
 };
 
-const getNewProducts = async () => {
+const getPopularProducts = async () => {
     try {
         let pool = await connect(_sql);
-        const query = `SELECT TOP(5) ID_PRODUCT idProduct, [IMAGE] [image], [NAME] [name], PRICE price, [TYPE] [type], [DESCRIPTION] [description], [DATETIME] [datetime]
-                    FROM TB_PRODUCTS
-                    ORDER BY [DATETIME] DESC`;
-
+        const query = `SELECT TOP(5) ID_PRODUCT idProduct, COUNT(ID_PRODUCT) quantity FROM TB_SALE_PRODUCTS GROUP BY ID_PRODUCT ORDER BY COUNT(ID_PRODUCT) DESC`;
+        
         const res = await pool.request().query(query);
 
         return res.recordset;
@@ -91,5 +89,5 @@ const getNewProducts = async () => {
 }
 
 export {
-    getById, getAllProducts, createProduct, getNewProducts, getByName
+    getById, getAllProducts, createProduct, getByName, getPopularProducts
 };

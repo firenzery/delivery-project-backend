@@ -72,8 +72,6 @@ const createClient = async (clientdata) => {
 
             const hashedPassword = await hash(clientdata.password, 10);
 
-
-
             const dateParts = clientdata.dateNasc.split("/");
 
             const dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
