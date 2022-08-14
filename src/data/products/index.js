@@ -78,7 +78,7 @@ const createProduct = async (productData) => {
 const getPopularProducts = async () => {
     try {
         let pool = await connect(_sql);
-        const query = `SELECT TOP(5) ID_PRODUCT idProduct, COUNT(ID_PRODUCT) quantity FROM TB_SALE_PRODUCTS GROUP BY ID_PRODUCT ORDER BY COUNT(ID_PRODUCT) DESC`;
+        const query = `SELECT TOP(5) ID_PRODUCT idProduct, SUM(AMOUNT) quantity FROM TB_SALE_PRODUCTS GROUP BY ID_PRODUCT ORDER BY SUM(AMOUNT) DESC`;
         
         const res = await pool.request().query(query);
 
