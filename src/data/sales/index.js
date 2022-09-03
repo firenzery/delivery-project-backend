@@ -6,7 +6,7 @@ const { connect, Int, Numeric, DateTime } = pkg;
 const getById = async (idSale) => {
     try {
         let pool = await connect(_sql);
-        const query = 'SELECT [ID_SALE] idSale, [ID_CLIENT] idClient, [PAYMENT] payment, [TOTAL] total, [PAYMENT_TYPE] paymentType, [STATE] state, [DT_SALE] saleDate FROM TB_SALES WHERE ID_SALE = @idSale';
+        const query = 'SELECT [ID_SALE] idSale, [ID_CLIENT] idClient, [PAYMENT] payment, [TOTAL] total, [PAYMENT_TYPE] paymentType, [STATE] state, [DT_SALE] saleDate, [RATING] [rating] FROM TB_SALES WHERE ID_SALE = @idSale';
         const sale = await pool.request()
             .input('idSale', Int, idSale)
             .query(query);
@@ -19,7 +19,7 @@ const getById = async (idSale) => {
 const getSalesById = async (idClient) => {
     try {
         let pool = await connect(_sql);
-        const query = 'SELECT [ID_SALE] idSale, [ID_CLIENT] idClient, [PAYMENT] payment, [TOTAL] total, [PAYMENT_TYPE] paymentType, [STATE] state, [DT_SALE] saleDate FROM TB_SALES WHERE ID_CLIENT = @idClient';
+        const query = 'SELECT [ID_SALE] idSale, [ID_CLIENT] idClient, [PAYMENT] payment, [TOTAL] total, [PAYMENT_TYPE] paymentType, [STATE] state, [DT_SALE] saleDate , [RATING] [rating] FROM TB_SALES WHERE ID_CLIENT = @idClient';
         const sale = await pool.request()
             .input('idClient', Int, idClient)
             .query(query);
@@ -57,7 +57,8 @@ const addSaleById = async(sale, products) => {
                 PAYMENT,
                 PAYMENT_TYPE,
                 STATE,
-                DT_SALE
+                DT_SALE,
+                RATING
             )
             VALUES (
                 @idClient,
@@ -65,7 +66,8 @@ const addSaleById = async(sale, products) => {
                 @payment,
                 @paymentType,
                 @state,
-                @saleDate
+                @saleDate,
+                @rating
             );
             SELECT SCOPE_IDENTITY() AS [scopeIdentity];
             `;
@@ -77,6 +79,7 @@ const addSaleById = async(sale, products) => {
             .input('paymentType', Int, sale.paymentType)
             .input('state', Int, 0)
             .input('saleDate', DateTime, new Date())
+            .input('rating', Numeric(2,1), 0.0)
             .query(queryTbSales);
 
         const queryTbSaleProducts = `INSERT INTO
@@ -105,25 +108,30 @@ const addSaleById = async(sale, products) => {
     }
 }
 
-const updateStateSale = async (idSale, state) => {
+const updateSale = async (sale) => {
     try {
         let pool = await connect(_sql);
 
+
         const query = `UPDATE TB_SALES 
-            SET STATE = @state 
+            SET PAYMENT = @payment, TOTAL = @total, PAYMENT_TYPE = @paymentType, STATE = @state, RATING = @rating
             WHERE ID_SALE = @idSale`;
 
         await pool.request()
-            .input('idSale', Int, idSale)
-            .input('state', Int, state)
+            .input('idSale', Int, sale.idSale)
+            .input('payment', Int, sale.payment)
+            .input('total', Numeric(6,2), sale.total)
+            .input('paymentType', Int, sale.paymentType)
+            .input('state', Int, sale.state)
+            .input('rating', Numeric(2,1), sale.rating)
             .query(query);
 
-        return 'Alterado status da compra com sucesso.';
+        return 'Alterado compra com sucesso.';
     } catch (error) {
         throw error;
     }
 }
 
 export {
-    getSalesById, addSaleById, getById, getProductsById, updateStateSale
+    getSalesById, addSaleById, getById, getProductsById, updateSale
 };

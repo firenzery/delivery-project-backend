@@ -18,7 +18,7 @@ const getById = async (productId) => {
 const getByName = async (name) => {
     try {
         let pool = await connect(_sql);
-        const query = 'SELECT ID_PRODUCT idProduct, [IMAGE] [image], [NAME] [name], PRICE price, [TYPE] [type], [DESCRIPTION] [description], [DATETIME] [datetime] FROM TB_PRODUCTS WHERE NAME = @name';
+        const query = 'SELECT ID_PRODUCT idProduct, [IMAGE] [image], [NAME] [name], PRICE price, [TYPE] [type], [QUANTITY] [quantity], [DESCRIPTION] [description], [DATETIME] [datetime] FROM TB_PRODUCTS WHERE NAME = @name';
         const product = await pool.request()
             .input('name', NVarChar(50), name)
             .query(query);
@@ -31,7 +31,7 @@ const getByName = async (name) => {
 const getAllProducts = async () => {
     try {
         let pool = await connect(_sql);
-        const query = 'SELECT ID_PRODUCT idProduct, [IMAGE] [image], [NAME] [name], PRICE price, [TYPE] [type], [DESCRIPTION] [description], [DATETIME] [datetime] FROM TB_PRODUCTS';
+        const query = 'SELECT ID_PRODUCT idProduct, [IMAGE] [image], [NAME] [name], PRICE price, [TYPE] [type], [QUANTITY] [quantity], [DESCRIPTION] [description], [DATETIME] [datetime] FROM TB_PRODUCTS';
         const products = await pool.request().query(query);
         return products.recordset;
     } catch (error) {
@@ -48,6 +48,7 @@ const createProduct = async (productData) => {
                 NAME,
                 PRICE,
                 TYPE,
+                QUANTITY,
                 DESCRIPTION,
                 DATETIME
             )
@@ -56,6 +57,7 @@ const createProduct = async (productData) => {
                 @name,
                 @price,
                 @type,
+                @quantity,
                 @description,
                 @datetime
             )`;
@@ -65,6 +67,7 @@ const createProduct = async (productData) => {
             .input('name', NVarChar(50), productData.name)
             .input('price', Numeric(4,2), productData.price)
             .input('type', Int, productData.type)
+            .input('quantity', Int, productData.quantity)
             .input('description', NVarChar(300), productData.description)
             .input('datetime', DateTime, new Date())
             .query(query);

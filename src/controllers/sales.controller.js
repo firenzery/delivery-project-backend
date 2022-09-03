@@ -1,5 +1,5 @@
 import { request } from 'express';
-import { getById, getSalesById, addSaleById, getProductsById, updateStateSale } from '../data/sales/index.js';
+import { getById, getSalesById, addSaleById, getProductsById, updateSale } from '../data/sales/index.js';
 const getSalesByUser = async (req, res, next) => {
     try {
         const saleId = req.params.id;
@@ -39,9 +39,9 @@ const addSaleByUser = async (req, res, next) => {
     }
 }
 
-const alterStateSale = async (req, res, next) => {
+const alterSale = async (req, res, next) => {
     try {
-        const data = await updateStateSale(req.body.idSale, req.body.state);
+        const data = await updateSale(req.body);
         res.send(data);
     } catch (error) {
         res.status(400).send(`Erro ao alterar status da compra ==> Erro: ${error.message}`);
@@ -49,5 +49,5 @@ const alterStateSale = async (req, res, next) => {
 }
 
 export {
-    getSalesByUser, addSaleByUser, getSaleById, getProductsBySaleId, alterStateSale
+    getSalesByUser, addSaleByUser, getSaleById, getProductsBySaleId, alterSale
 };
